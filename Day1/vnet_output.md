@@ -1,14 +1,10 @@
-# 📖 Technical Reference: Terraform Data Transformation
+## VNET Output ပုံစံကို Loop ပတ်ပြီး Format ချရခြင်း အကြောင်းအရင်း
 
-This document details how we convert raw Azure Resource Objects into clean, searchable Maps within our `outputs.tf`.
+Terraform မှာ for_each ကိုသုံးပြီး Resource တွေအများကြီး ဆောက်တဲ့အခါ output ထုတ်ရင် သတိထားရမယ့် အချက်တွေရှိတယ်။
 
----
+### ၁။ Raw Format နဲ့ ပေါ်နေမှာကို ရှင်းထုတ်ခြင်း
 
-## 1. The Raw Data Source (`v`)
-
-When Terraform creates resources using `for_each`, it stores them as a Map of Objects. Each object `v` contains the full set of **attributes** returned by the Azure API. 
-
-**Raw State Representation of `v` before filtering:**
+တကယ်လို့ ```for loop``` မသုံးဘဲ ```value = azurerm_virtual_network.vnet``` ဆိုပြီး ဒီအတိုင်း ထုတ်လိုက်ရင် Azure ကပေးတဲ့ Data တွေအကုန် (ဥပမာ - address_space, location, guid, dns_settings စတာတွေအကုန်) Raw Object Format ကြီးနဲ့ ပေါ်နေလိမ့်မယ်။ 
 
 ```hcl
 {
@@ -33,41 +29,32 @@ When Terraform creates resources using `for_each`, it stores them as a Map of Ob
   }
 }
 ```
-## 2. The Transformation Logic
 
-We use a for loop to "pluck" specific attributes (like id) out of the giant raw block.
+အဲ့ဒီအခါ တစ်ခြား Module မှာ ပြန်ခေါ်သုံးချင်ရင် Data တွေက ရှုပ်ထွေးနေပြီး လိုချင်တဲ့ ID တစ်ခုတည်းကို ဆွဲထုတ်ရတာ ခက်ခဲစေတယ်။
 
-```hcl
-output "vnet_ids" {
-  value = { for k, v in azurerm_virtual_network.vnet : k => v.id }
-}
-```
+### ၂။ Key နဲ့ Value ဘယ်ကရသလဲ?
 
-### How the Variables Work:
+ဒီနေရာမှာ k => v.id ဆိုတဲ့ logic က အရေးကြီးတယ်:
 
-- k (Key): The human-readable name from your .tfvars (e.g., "vpn-vnet or mahar-vnet").
-- v (Value): The entire raw object block (Attributes) shown in Section 1.
-- v.id: A specific pointer to the id string inside that raw block.
+- Key (k): Variable (var.vnets) ထဲမှာ မင်းပေးခဲ့တဲ့ နာမည်တွေဖြစ်တဲ့ mahar-vnet, vpn-vnet ဆိုတာတွေက Key အဖြစ် ပြန်ပါလာတာ။ ဒါကြောင့် နောက် Module ကနေ ခေါ်သုံးရင် ကိုယ်ပေးခဲ့တဲ့ နာမည်နဲ့တင် ရှာရတာ လွယ်သွားတယ်။
 
-## 3. The Final Map (The "Clean" Output)
+- Value (v.id): ဒါကတော့ Azure ဘက်ကနေ Resource ဆောက်ပြီးမှ ရလာတဲ့ Resource ID တွေဖြစ်တယ်။ ဒီ ID တွေကို Terraform Documentation ရဲ့ azurerm_virtual_network - Attribute Reference အောက်မှာ ကြည့်နိုင်တယ်။ v ထဲမှာ attribute တွေအများကြီးရှိတဲ့အထဲကမှ ငါတို့က .id တစ်ခုတည်းကိုပဲ သီးသန့် Filter လုပ်ပြီး ထုတ်လိုက်တာ။
 
-The result of the k => v.id mapping is a high-performance Map of Strings. This is what is stored in the outputs section of the Remote State.
+### ၃။ ပြန်ခေါ်သုံးတဲ့အခါ ဘယ်လိုလွယ်ကူသွားသလဲ?
+
+ဒီလို format ချထားပေးတဲ့အတွက် နောက် Module တစ်ခု (ဥပမာ - NAT Gateway သို့မဟုတ် Virtual Machine) ကနေ ဒီ VNET ID ကို လိုချင်တဲ့အခါ ရှုပ်ရှုပ်ရှက်ရှက်တွေ လိုက်ရှာနေစရာ မလိုတော့ဘူး။
+
+ဥပမာအားဖြင့် -
+
+ဒီလို vnet_ids output ဟာ Map ပုံစံမျိုး ထွက်လာတဲ့အတွက်:
 
 ```hcl
 vnet_ids = {
-  "mahar-vnet" = "/subscriptions/6f48.../resourceGroups/mahar/providers/Microsoft.Network/virtualNetworks/mahar-vnet"
-  "vpn-vnet"   = "/subscriptions/6f48.../resourceGroups/mahar/providers/Microsoft.Network/virtualNetworks/vpn-vnet"
+  "mahar-vnet" = "/subscriptions/.../vnet-mahar-id"
+  "vpn-vnet"   = "/subscriptions/.../vnet-vpn-id"
 }
 ```
 
-## 4. Why This Architecture is Used
+တခြားနေရာမှာ ပြန်သုံးရင် ဒီလိုပဲ တိုက်ရိုက် ခေါ်လို့ရသွားတယ် ```data.terraform_remote_state.network.outputs.vnet_ids["mahar-vnet"]```
 
-1. Attribute Filtering: Azure returns ~50 attributes per VNET. We only export the id to keep the state clean and efficient.
-
-2. Type Safety: Downstream resources (like VM NICs or Peering) expect a string. If we passed the whole object v, the deployment would fail due to a type mismatch.
-
-3. Searchability: By using a Map, other developers can find a specific ID instantly by its name instead of iterating through a long, unlabelled list.
-
-### Summary for Junior DevOps
-
-Variables define our intent → Azure Attributes provide the raw data (v) → Outputs filter that data into a clean Map (k => v.id).
+အနှစ်ချုပ်ပြောရရင် ဒီလို ရေးပေးခြင်းအားဖြင့် Output Data ကို Weight ပေါ့သွားစေတယ် (Clean ဖြစ်စေတယ်)၊ နောက်ပြီး တစ်ခြား Module တွေကနေ ပြန်ခေါ်သုံးတဲ့အခါမှာလည်း ကိုယ်ပေးခဲ့တဲ့ Key နာမည်လေး သိရုံနဲ့တင် ID ကို တိုက်ရိုက် ဆွဲယူနိုင်သွားစေတာ ဖြစ်ပါတယ်။
