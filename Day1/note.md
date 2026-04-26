@@ -32,8 +32,6 @@
     * **Usage:** Reducing repetition. For example, creating a standard naming convention like `local.full_name = "${var.prefix}-${var.env}-${var.region}"`.
     * **Benefit:** If you need to change the naming style, you change it in **one** place (the local), not 50 places in the resources.
 
-
-
 ### 6. Keeping `.tfvars` Safe (The Security Rule)
 * **The Logic:** `.tfvars` files contain environment-specific data, IP ranges, or secrets.
 * **The Senior Way:** **Never** push `.tfvars` to Git. 
