@@ -81,7 +81,7 @@ Terraform မှာ `for_each` ကိုသုံးပြီး Resource တွ
 
 ဥပမာအားဖြင့် -
 
-ဒီလို vnet_ids output ဟာ Map ပုံစံမျိုး ထွက်လာတဲ့အတွက်:
+ဒီလို vnet_ids output ဟာ Map ပုံစံမျိုး ထွက်လာတဲ့အတွက်: 
 
 ```hcl
 vnet_ids = {
@@ -89,6 +89,8 @@ vnet_ids = {
   "vpn-vnet"   = "/subscriptions/.../vnet-vpn-id"
 }
 ```
+
+> NOTE: အပေါ်က raw format Map(Object) ဖြစ်ပါတယ်။ ဒါက key , value map ပါ။
 
 vm တို့ nat gateway တို့ဆောက်တဲ့အခါ subnet id , vnet id တွေဟာ string ကိုပဲ လက်ခံတာမလို့ output နဲ့ type တူပြီး ဒီလို တိုက်ရိုက် ခေါ်လို့ရသွားတယ် ```data.terraform_remote_state.network.outputs.vnet_ids["mahar-vnet"]```
 
