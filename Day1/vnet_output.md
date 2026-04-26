@@ -6,7 +6,7 @@
 
 ## ပြဿနာ- Raw Format (Loop မပတ်ခင်) ၏ အခက်အခဲ
 
-Terraform မှာ `for_each` ကိုသုံးပြီး Resource တွေအများကြီး ဆောက်တဲ့အခါ output ထုတ်ရင် သတိထားရမယ့် အချက်တွေရှိတယ်။ တကယ်လို့ `for` loop မသုံးဘဲ `value = azurerm_virtual_network.vnet` ဆိုပြီး ဒီအတိုင်း ထုတ်လိုက်ရင် Azure ကပေးတဲ့ Data တွေအကုန် အောက်ကအတိုင်း (ဥပမာ - address_space, guid, dns_settings စတာတွေအကုန်) **Raw Object Format** ကြီးနဲ့ ပေါ်နေလိမ့်မယ်။
+Terraform မှာ `for_each` ကိုသုံးပြီး Resource တွေအများကြီး ဆောက်တဲ့အခါ output ထုတ်ရင် သတိထားရမယ့် အချက်တွေရှိတယ်။ တကယ်လို့ `for` loop မသုံးဘဲ `value = azurerm_virtual_network.vnet` ဆိုပြီး ဒီအတိုင်း ထုတ်လိုက်ရင် Azure ကပေးတဲ့ Data တွေအကုန် အောက်ကအတိုင်း (ဥပမာ - address_space, guid, dns_settings စတာတွေအကုန်) **Raw Object Format** ကြီးနဲ့ ပေါ်နေလိမ့်မယ်။ 
 
 ```hcl
 {
@@ -31,15 +31,11 @@ Terraform မှာ `for_each` ကိုသုံးပြီး Resource တွ
   }
 }
 ```
-
-### ဘာကြောင့် အသုံးမဝင်တာလဲ:
-
-- တစ်ခြား Module မှာ ပြန်ခေါ်သုံးချင်ရင် Data တွေက အရမ်းရှုပ်ထွေးနေမယ်။
-- Azure Resource တွေ (ဥပမာ VM NIC) ဟာ String (ID) ကိုပဲ လက်ခံတာဖြစ်ပြီး အပေါ်က Object ကြီးကို လက်မခံတဲ့အတွက် Type Mismatch Error တက်လိမ့်မယ်။
+အဲ့ output ကြီးကို အခြား vm, aks တို့လို Module တွေမှာ ပြန်ခေါ်သုံးချင်ရင် Data တွေက အရမ်းရှုပ်ထွေးနေမယ်။ Azure Resource တွေ (ဥပမာ VM ရဲ့ NIC, AKS ရဲ့ subnet ID ) ဟာ String ကိုပဲ လက်ခံတာဖြစ်ပြီး အပေါ်က Object ကြီးကို လက်မခံတဲ့အတွက် Type Mismatch Error တက်လိမ့်မယ်။
 
 ###  Argument Types ဆိုတာ ဘာလဲ?
 
-Azure Resource တိုင်းမှာ သူ့ရဲ့ Argument တစ်ခုချင်းစီအတွက် လက်ခံတဲ့ Data Type အသေအချာ ရှိပါတယ်။
+​Argument ဆိုတာ resource တစ်ခု ဆောက်ရင် ထည့်ပေးရတဲ့ field တွေပါ။ Azure Resource တိုင်းမှာ သူ့ရဲ့ Argument တစ်ခုချင်းစီအတွက် လက်ခံတဲ့ Data Type အသေအချာ ရှိပါတယ်။
 
 - Name: String ပဲ လက်ခံတယ်။ (ဥပမာ- "my-vm")
 - Network Interface ID: String ပဲ လက်ခံတယ်။ (ဥပမာ- "/subscriptions/.../nic1")
