@@ -5,43 +5,7 @@ This document details how we convert raw Azure Resource Objects into clean, sear
 ---
 
 ## 1. The Raw Data Source (`v`)
-When Terraform creates resources using `for_each`, it stores them as a Map of Objects. Each object `v` contains the full set of **attributes** returned by the Azure API. 
 
-**Raw State Representation of `v` before filtering:**
-
-```hcl
-{
-  "mahar-vnet" = {                             # This is 'k' (The Key)
-    "address_space"           = ["10.224.0.0/12"]
-    "dns_servers"             = []
-    "guid"                    = "239aa0fb-240d-4666-9c6c-20db4023d96b"
-    "id"                      = "/subscriptions/.../virtualNetworks/mahar-vnet" # <-- v.id
-    "location"                = "southeastasia"
-    "name"                    = "mahar-vnet"
-    "resource_group_name"     = "mahar"
-    "tags"                    = { "Project" = "MBR" }
-    "bgp_community"           = ""
-    "flow_timeout_in_minutes" = 0
-  },
-  "vpn-vnet" = {                               # This is the next 'k'
-    "address_space"           = ["10.20.0.0/16"]
-    "id"                      = "/subscriptions/.../virtualNetworks/vpn-vnet"   # <-- v.id
-    "location"                = "southeastasia"
-    "name"                    = "vpn-vnet"
-    # ... additional attributes ...
-  }
-}
-
-No problem. Here is the complete technical documentation in a raw Markdown code block so you can copy and paste it easily into your internal wiki or README file.
-
-Markdown
-# 📖 Technical Reference: Terraform Data Transformation
-
-This document details how we convert raw Azure Resource Objects into clean, searchable Maps within our `outputs.tf`.
-
----
-
-## 1. The Raw Data Source (`v`)
 When Terraform creates resources using `for_each`, it stores them as a Map of Objects. Each object `v` contains the full set of **attributes** returned by the Azure API. 
 
 **Raw State Representation of `v` before filtering:**
@@ -81,7 +45,7 @@ output "vnet_ids" {
 
 ### How the Variables Work:
 
-- k (Key): The human-readable name from your .tfvars (e.g., "vpn-vnet or core-vnet").
+- k (Key): The human-readable name from your .tfvars (e.g., "vpn-vnet or mahar-vnet").
 - v (Value): The entire raw object block (Attributes) shown in Section 1.
 - v.id: A specific pointer to the id string inside that raw block.
 
