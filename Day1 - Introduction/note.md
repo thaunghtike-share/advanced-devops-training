@@ -10,19 +10,19 @@ A. Single Infrastructure Model (Cost-Saving / Layered Approach)
 
 This is for when we use one physical AKS cluster and logically separate our environments. We split our code into distinct layers so our state files remain small and secure.
 
-![Single AKS](./single-aks.png)
+![Single AKS](./images/single-aks.png)
 
 B. Multi-Env Infrastructure Model (Enterprise Approach)
 
 For strict isolation (Zero Blast Radius), large companies build completely separate AKS clusters for Dev, UAT, and Prod. We use a modules/ folder so we don't duplicate code.
 
-![Multi Aks](./multi-aks.png)
+![Multi Aks](./images/multi-aks.png)
 
 ## 🐙 2. Application Layer: The "App of Apps" GitOps Pattern
 
 To deploy our applications cleanly without making a mess, we use the App of Apps pattern. We separate our manifests by environment folders (dev/, uat/, prod/). Inside each folder, we have a root.yaml (Parent App). When we apply the root.yaml, it automatically detects and deploys all the Child Apps (like app1-uat.yaml) sitting next to it.
 
-![GitOps Repo](./gitops-repo.jpeg)
+![GitOps Repo](./images/gitops-repo.jpeg)
 
 ### 3. How the "App of Apps" Actually Works
 
