@@ -103,6 +103,43 @@ data "terraform_remote_state" "rg" {
 - Uses remote state to connect layers
 - Follows company folder standard
 
+## Best Practice: Using `for_each` with Child Modules
+
+### 1. Avoid `for_each` inside child modules
+- Child modules should be kept simple and reusable.
+- Do not handle multiple resource creation inside the module itself.
+- Each module should represent **one unit of infrastructure** (e.g., one VM).
+
+---
+
+### 2. Design child modules for a single resource
+- Example: A VM module should create **only one VM**.
+- This makes the module:
+  - Easier to understand  
+  - Easier to debug  
+  - Reusable in different scenarios  
+
+---
+
+### 3. Handle multiple resources at the root level
+- Use `for_each` in the root module.
+- Pass a `map(object)` to define multiple instances.
+- Root module is responsible for scaling resources.
+
+---
+
+### 4. Example approach
+- **Child module** → defines 1 VM  
+- **Root module** → uses `for_each` to create 5 VMs  
+
+---
+
+### 5. Why this approach is better
+- Clear separation of responsibility
+- Better reusability of modules
+- Easier environment scaling (dev / uat / prod)
+- Cleaner and more maintainable code structure
+
 ---
 
 ## 🟨 Assignment 2 — Multi-Environment (Advanced)
