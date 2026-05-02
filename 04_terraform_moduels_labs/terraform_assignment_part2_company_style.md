@@ -183,24 +183,100 @@ Support multiple environments (dev, uat, prod) using the same structure
 
 ### 🧱 Target Structure
 ```
-modules/
-├── azure_rg/
-├── azure_vnet/
-└── azure_vm/
-
-live/
-├── dev/
-│   ├── 00_rg/
-│   ├── 01_networking/
-│   └── 03_vm/
-├── uat/
-│   ├── 00_rg/
-│   ├── 01_networking/
-│   └── 03_vm/
-└── prod/
-    ├── 00_rg/
-    ├── 01_networking/
-    └── 03_vm/
+├── modules/
+│   ├── azure_rg/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
+│   │
+│   ├── azure_vnet/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
+│   │
+│   └── azure_vm/
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── outputs.tf
+│       └── README.md
+│
+└── live/
+    ├── dev/
+    │   ├── 00_rg/
+    │   │   ├── providers.tf
+    │   │   ├── backend.tf
+    │   │   ├── main.tf
+    │   │   ├── variables.tf
+    │   │   ├── outputs.tf
+    │   │   └── terraform.tfvars
+    │   │
+    │   ├── 01_networking/
+    │   │   ├── providers.tf
+    │   │   ├── backend.tf
+    │   │   ├── main.tf
+    │   │   ├── variables.tf
+    │   │   ├── outputs.tf
+    │   │   └── terraform.tfvars
+    │   │
+    │   └── 03_vm/
+    │       ├── providers.tf
+    │       ├── backend.tf
+    │       ├── main.tf
+    │       ├── variables.tf
+    │       ├── outputs.tf
+    │       └── terraform.tfvars
+    │
+    ├── uat/
+    │   ├── 00_rg/
+    │   │   ├── providers.tf
+    │   │   ├── backend.tf
+    │   │   ├── main.tf
+    │   │   ├── variables.tf
+    │   │   ├── outputs.tf
+    │   │   └── terraform.tfvars
+    │   │
+    │   ├── 01_networking/
+    │   │   ├── providers.tf
+    │   │   ├── backend.tf
+    │   │   ├── main.tf
+    │   │   ├── variables.tf
+    │   │   ├── outputs.tf
+    │   │   └── terraform.tfvars
+    │   │
+    │   └── 03_vm/
+    │       ├── providers.tf
+    │       ├── backend.tf
+    │       ├── main.tf
+    │       ├── variables.tf
+    │       ├── outputs.tf
+    │       └── terraform.tfvars
+    │
+    └── prod/
+        ├── 00_rg/
+        │   ├── providers.tf
+        │   ├── backend.tf
+        │   ├── main.tf
+        │   ├── variables.tf
+        │   ├── outputs.tf
+        │   └── terraform.tfvars
+        │
+        ├── 01_networking/
+        │   ├── providers.tf
+        │   ├── backend.tf
+        │   ├── main.tf
+        │   ├── variables.tf
+        │   ├── outputs.tf
+        │   └── terraform.tfvars
+        │
+        └── 03_vm/
+            ├── providers.tf
+            ├── backend.tf
+            ├── main.tf
+            ├── variables.tf
+            ├── outputs.tf
+            └── terraform.tfvars
 ```
 
 ---
