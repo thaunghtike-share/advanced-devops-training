@@ -36,11 +36,12 @@
 * **Concepts:** Moving from static scripts to "Intelligent" and "Bootstrapped" infrastructure.
 * **Topic 1: Conditional Infrastructure:** * Mastering the Ternary Operator: `count = var.create_vm ? 1 : 0`.
     * **The Lead's Insight:** Understanding why `for_each` is the professional standard for scaling to prevent "Index Shifting" errors.
-* **Topic 2: Dynamic Blocks:** * Implementing `dynamic` blocks to iterate over nested configurations (e.g., generating multiple `security_rule` blocks within a single NSG resource).
+* **Topic 2: Terraform Import:** * **terraform import:** Learn how to import existing resource using `terraform import` command
+* **Topic 3: Dynamic Blocks:** * Implementing `dynamic` blocks to iterate over nested configurations (e.g., generating multiple `security_rule` blocks within a single NSG resource).
     
-* **Topic 3: Terraform Provisioners (The Last Mile):** * **local-exec:** Running scripts on the local execution machine.
+* **Topic 4: Terraform Provisioners (The Last Mile):** * **local-exec:** Running scripts on the local execution machine.
     * **remote-exec & file:** Automating VM bootstrapping (e.g., installing Nginx or Docker) immediately after the resource is created.
-* **Topic 4: Environment Isolation (Workspaces):** * Managing state isolation using `terraform workspace new`, `list`, and `select`.
+* **Topic 5: Environment Isolation (Workspaces):** * Managing state isolation using `terraform workspace new`, `list`, and `select`.
     * Using `${terraform.workspace}` to dynamically name resources based on the active environment.
     
 
