@@ -23,6 +23,10 @@ live/
     └── terraform.tfvars
 ```
 
+> NOTE
+>
+> You can create an additional layer such as 04_azure_sql, and use remote (published) modules for it.
+
 ---
 
 ### 🔧 Tasks
