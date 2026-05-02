@@ -6,30 +6,29 @@
 ## 📅 Month 1: Advanced Terraform, Key Vault & K8s Internals
 **Objective:** Master Infrastructure as Code (IaC) and secure Kubernetes deployments.
 
-### Week 1: # Terraform Mastery: Week 1 Progress Summary
+### Week 1: # Terraform Mastery Progress Summary
 
-### Day 1: Enterprise Structure & Project Layout
-* **Concepts:** Introduction to enterprise-grade Terraform project structures. Understanding how to separate concerns by dividing infrastructure into logical directories (e.g., `00_resource_groups`, `01_networking`, `02_compute`).
-* **Key Takeaway:** Reusability is king. Using a modular approach ensures that code is not just a script, but a maintainable product.
-* **Documentation:** Implementing `terraform-docs` to automatically generate `README.md` files for each module to describe inputs and outputs.
+### Day 1: Terraform Fundamentals (Part 1)
+* **Concepts:** Core pillars of Infrastructure as Code (IaC). Mastering **Input Data Modeling** using complex types like `map(object({...}))` and using **Locals** to keep the logic "DRY" (Don't Repeat Yourself).
+* **Iteration Engine:** Implementing `for_each` to scale resources dynamically and using the `lookup()` function to handle optional data attributes and avoid runtime errors.
+* **Key Takeaway:** Understanding that Terraform is not just a script, but a state-driven engine that requires precise data structures to function at scale.
 
 ### Day 2: State Management & Remote State
-* **Concepts:** Mastering the Terraform State lifecycle. Moving from local state to **Remote Backend** (Azure Storage Account) with State Locking (Blob Lease/Table Storage).
-* **Deep Dive:** Using the `terraform_remote_state` data source to enable cross-folder communication.
-* **Example:** Fetching Resource Group details from `00_resource_groups` to use in the networking layer without hardcoding names.
+* **Concepts:** Moving from local state to **Enterprise-grade Remote Backends** (Azure Storage Account) to enable team collaboration and **State Locking**.
+* **Data Chaining:** Mastering the `terraform_remote_state` data source to fetch information from one layer (e.g., Resource Group IDs) and consume it in another layer (Networking) without hardcoding values.
+* **Deep Dive:** Understanding the state lifecycle—how Terraform tracks real-world infrastructure vs. configuration files to maintain the "Source of Truth."
 
-### Day 3: Advanced Data Structures & Looping
-* **Concepts:** Moving beyond simple strings to complex types like `map(object({...}))`.
-* **Techniques:** * **`for_each` Loop:** Automating the creation of multiple VNets and Subnets based on a single map variable.
-    * **Data Transformation:** Using `flatten` and `for` loops in `outputs.tf` to clean up Raw Data into "Clean Maps" (e.g., `k => v.id`).
-    * **Logic:** Converting an Object-heavy output into a simple String Map to prevent **Type Mismatch Errors** in downstream modules.
+### Day 3: Introduction to Terraform Modules
+* **Concepts:** Moving from "Scripting" to "Engineering." Understanding a Module as a **Container** that encapsulates multiple resources into a single logical unit.
+* **Module Anatomy:** Establishing the **Standard Module Structure**—the role of `main.tf` (Implementation), `variables.tf` (The Interface), and `outputs.tf` (The Data Contract).
+* **Sourcing:** Learning how to call local modules via relative paths and exploring the **Terraform Registry** to consume official, verified infrastructure patterns.
 
-### Day 4: Common Usage & Static Resource Provisioning
-* **Concepts:** Balancing Automation with Specificity. Understanding when to use `for_each` (for scaling) versus **Indexing** (for static/specific resources like an OpenVPN Server).
-* **Static Referencing:**
-    * Referencing specific map keys directly: `var.vms["OPENVPN-SERVER"].size`.
-    * Managing **Dynamic Blocks** for security rules to handle a list of ports within a single static NSG resource.
-* **Interface Standard:** Establishing a "Data Contract" where the Networking module provides IDs as Strings, and the VM module consumes them directly by key.
+### Day 4: Advanced Modules Lab (The Refactoring Challenge)
+* **Hands-on Lab:** Refactoring individual resource folders (`00_rg`, `01_vnet`, `03_vm`) into a library of **Reusable Child Modules**.
+* **Output Chaining:** Implementing a "Producer-Consumer" pattern where the Networking module outputs a Subnet ID and the VM module consumes it as a direct input, replacing static data sources.
+* **Environmental Scaling:** Implementing a **Root Module** orchestrator to deploy across multiple environments (Dev, UAT, Prod) using the same code base with different parameter values (e.g., SKU sizes and CIDR blocks).
+
+---
 
 ### Week 2: K8s Cluster Management & Lens IDE
 * **Day 4: Real-World K8s Management**

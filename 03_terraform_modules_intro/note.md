@@ -1,6 +1,3 @@
-## Terraform Fundamentals
-
-https://www.youtube.com/watch?v=CGBSjviD5NY
 
 ## Module Essentials & Using Existing Modules
 
