@@ -30,52 +30,49 @@
 
 ---
 
-### Week 2: # Advanced Terraform Operations & Governance
+### Week 2: # Advanced Terraform Engineering & Enterprise Operations
 
-### Day 5: Conditional Logic & Dynamic Infrastructure
-* **Concepts:** Transitioning from static scripts to "Intelligent" configurations.
-* **Topic 1: Conditional Resource Provisioning:** * Implementing the Ternary Operator: `count = var.create_vm ? 1 : 0`.
-    * **The Lead's Insight:** Understanding why `for_each` is superior to `count` for scaling to prevent "Index Shifting" during resource updates.
-* **Topic 2: Dynamic Blocks:** * Mastering the `dynamic` block syntax to iterate over nested configurations (e.g., generating multiple `security_rule` blocks within a single NSG resource).
-* **Topic 3: Input Validation:** * Using `validation` blocks within variables to enforce SKU constraints and naming conventions, preventing "illegal" infrastructure from being planned.
-
-### Day 6: Provisioners & Environment Isolation
-* **Concepts:** Handling the "Last Mile" of configuration and managing multiple environments.
-* **Topic 1: Terraform Provisioners:** * **local-exec:** Running scripts on the local machine (e.g., updating local SSH config).
-    * **remote-exec & file:** Bootstrapping VMs by moving scripts and executing commands (e.g., installing Nginx/Docker) post-creation.
-* **Topic 2: Terraform Workspaces:** * Mastering state isolation using `terraform workspace new`, `list`, and `select`.
+### Day 5: Dynamic Logic, Provisioners & Environment Isolation
+* **Concepts:** Moving from static scripts to "Intelligent" and "Bootstrapped" infrastructure.
+* **Topic 1: Conditional Infrastructure:** * Mastering the Ternary Operator: `count = var.create_vm ? 1 : 0`.
+    * **The Lead's Insight:** Understanding why `for_each` is the professional standard for scaling to prevent "Index Shifting" errors.
+* **Topic 2: Dynamic Blocks:** * Implementing `dynamic` blocks to iterate over nested configurations (e.g., generating multiple `security_rule` blocks within a single NSG resource).
+    
+* **Topic 3: Terraform Provisioners (The Last Mile):** * **local-exec:** Running scripts on the local execution machine.
+    * **remote-exec & file:** Automating VM bootstrapping (e.g., installing Nginx or Docker) immediately after the resource is created.
+* **Topic 4: Environment Isolation (Workspaces):** * Managing state isolation using `terraform workspace new`, `list`, and `select`.
     * Using `${terraform.workspace}` to dynamically name resources based on the active environment.
-* **Topic 3: Architectural Debate:** * Comparing **Workspaces** (shared state file) vs. **Directory-based Layouts** (fully isolated states) and when to use each in an Enterprise setting.
+    
 
-### Day 7: State Refactoring, Security & CI/CD
-* **Concepts:** Production-grade safety, secret management, and automation.
-* **Topic 1: Zero-Downtime Refactoring:** * Implementing the **`moved` block** to rename resources or migrate them into modules without a "Destroy and Recreate" event.
-    * **State CLI:** Using `terraform state rm` and `terraform import` to bring existing manual resources under IaC management.
-* **Topic 2: Security & Lifecycle Hooks:** * **Secrets Management:** Integrating with **Azure Key Vault** data sources to pull credentials at runtime and using `sensitive = true`.
-    * **Lifecycle Management:** Using `prevent_destroy` to protect production databases and `create_before_destroy` for zero-downtime blue/green updates.
-* **Topic 3: The DevOps Pipeline:** * Orchestrating Terraform in **GitHub Actions** or **Azure DevOps**—automating `plan` on Pull Requests and `apply` on Merges to the `main` branch.
+### Day 6: Security, Lifecycle Management & CI/CD Pipelines
+* **Concepts:** Production-grade safety, secret governance, and automated delivery.
+* **Topic 1: Secrets & Security Governance:** * **Key Vault Integration:** Using `azurerm_key_vault_secret` data sources to pull credentials at runtime.
+    * Enforcing `sensitive = true` on variables/outputs and using `validation` blocks to restrict "illegal" resource SKUs.
+    
+* **Topic 2: Lifecycle Management & State Ops:** * **Safety Hooks:** Using `prevent_destroy` to protect Production databases and `create_before_destroy` for zero-downtime updates.
+    * **Zero-Downtime Refactoring:** Implementing the **`moved` block** to rename resources or migrate them into modules without a "Destroy and Recreate" event.
+* **Topic 3: Automated CI/CD Pipelines:** * Orchestrating Terraform in **GitHub Actions** or **Azure DevOps**.
+    * Automating `terraform plan` on Pull Requests and `terraform apply` on Merges to the `main` branch.
+    
 
----
-
-### **Assignment 3: The Smart Infrastructure (Day 5 & 6 Lab)**
-
-**Objective:** Build a self-configuring, environment-aware infrastructure.
-
-**The Task:**
-1. **Dynamic Security:** Use a `dynamic` block to deploy an NSG that opens a list of 5 ports (80, 443, 22, etc.) based on a single map variable.
-2. **Post-Build Scripting:** Use a **Provisioner** (`remote-exec`) to install a Web Server (Nginx/Apache) automatically once the VM is created.
-3. **Workspace Logic:** Use **Workspaces** to create `dev` and `prod`. Use a **Conditional** (`count`) to ensure a "Bastion Host" is ONLY created when the workspace is `prod`.
-
-### **Assignment 4: The Secure Refactor (Day 7 Lab)**
-
-**Objective:** Clean up existing "messy" code and secure sensitive data.
-
-**The Task:**
-1. **The Refactor:** Take a resource you previously created in the Root module and move it into a Child Module using a **`moved` block**. Prove that `terraform plan` shows 0 resources to be destroyed.
-2. **Zero-Secret Policy:** Remove all plain-text passwords from `terraform.tfvars`. Fetch the VM Administrator password from **Azure Key Vault** using a Data Source.
-3. **The Safety Catch:** Add a `lifecycle { prevent_destroy = true }` block to your Resource Group and try to run `terraform destroy`. Document the result.
+### Day 7: Enterprise Scaling with Terraform Cloud
+* **Concepts:** Moving the "State" and "Execution" to a centralized managed platform.
+* **Topic 1: Terraform Cloud (TFC) Fundamentals:** * Setting up Organizations and Workspaces in TFC.
+    * **Remote Execution:** Moving from "Laptop-driven" Terraform to "Cloud-driven" execution.
+* **Topic 2: State Hosting & Governance:** * Managing Remote State in TFC and understanding **State Versioning** and **History**.
+    * **VCS Integration:** Connecting TFC directly to GitHub/GitLab for automated runs.
+* **Topic 3: Team Collaboration:** * Implementing **Private Module Registries** (sharing modules across the whole company).
+    * Understanding **Policy as Code** (Sentinal/OPA) to block non-compliant code before it is deployed.
 
 ---
 
-**Summary & Graduation Wrap-up**
-> "By the end of Day 7, you are no longer just writing code. You are managing **State**, enforcing **Security**, and automating **Delivery**. You are ready for a Production environment."
+### **Assignment: The Graduation Project (Day 5, 6 & 7)**
+
+**Objective:** Deploy a Production-Ready environment using Logic, Security, and Cloud Execution.
+
+**The Tasks:**
+1. **The Logic:** Create a **Workspace** named `prod`. Use a **Conditional** to only deploy a "Log Analytics Workspace" in `prod`. Use a **Dynamic Block** to open a list of 5 ports in your NSG.
+2. **The Last Mile:** Use a **Provisioner** to install Nginx and write a custom "Hello World" HTML file to the VM.
+3. **The Refactor:** Use a **`moved` block** to move your VM resource into a Child Module. Prove there is 0 downtime.
+4. **The Lock:** Fetch the VM password from **Azure Key Vault** and apply a `prevent_destroy` hook to the Resource Group.
+5. **The Cloud:** Migrate your local state to **Terraform Cloud** and trigger a successful run via a GitHub commit.
