@@ -30,118 +30,52 @@
 
 ---
 
-### Week 2: K8s Cluster Management & Lens IDE
-* **Day 4: Real-World K8s Management**
-    * **1-Hour Session:** Guide on how Senior Engineers interact with clusters.
-    * **Offline Assignment:** Install Lens IDE. Connect to AKS and explore namespaces, core components, and nodes.
-* **Day 5: K8s RBAC & Identities**
-    * **1-Hour Session:** Explain Azure Managed Identities and K8s RBAC.
-    * **Offline Assignment:** Write Terraform code to assign Roles so the AKS cluster can securely communicate with Azure Key Vault.
-* **Day 6: Month 1 Infrastructure Review**
-    * **1-Hour Session:** Strict code review of all Terraform modules.
-    * **Offline Assignment:** Resolve mentor comments, destroy infrastructure, and re-apply to prove **idempotency**.
+### Week 2: # Advanced Terraform Operations & Governance
 
-### Week 3: Helm Processing & Vault Injection
-* **Day 7: Helm Charts Architecture**
-    * **1-Hour Session:** Critique raw YAML vs. Helm. Explain Helm templating.
-    * **Offline Assignment:** Convert application Kubernetes YAML files into a structured Helm Chart.
-* **Day 8: Fetching Secrets from Vault**
-    * **1-Hour Session:** Explain Azure Key Vault Provider for Secrets Store CSI Driver.
-    * **Offline Assignment:** Configure Helm chart to fetch DB credentials from Key Vault and mount them as environment variables.
-* **Day 9: Secrets Validation**
-    * **1-Hour Session:** Verify the secret injection flow.
-    * **Offline Assignment:** Use Lens to `exec` into the pod and prove the application successfully connected to the DB using Vault secrets.
+### Day 5: Conditional Logic & Dynamic Infrastructure
+* **Concepts:** Transitioning from static scripts to "Intelligent" configurations.
+* **Topic 1: Conditional Resource Provisioning:** * Implementing the Ternary Operator: `count = var.create_vm ? 1 : 0`.
+    * **The Lead's Insight:** Understanding why `for_each` is superior to `count` for scaling to prevent "Index Shifting" during resource updates.
+* **Topic 2: Dynamic Blocks:** * Mastering the `dynamic` block syntax to iterate over nested configurations (e.g., generating multiple `security_rule` blocks within a single NSG resource).
+* **Topic 3: Input Validation:** * Using `validation` blocks within variables to enforce SKU constraints and naming conventions, preventing "illegal" infrastructure from being planned.
 
-### Week 4: Database Routing & Month 1 Wrap-up
-* **Day 10: Dev/UAT DB on K8s**
-    * **1-Hour Session:** Discuss cost-saving for non-prod environments.
-    * **Offline Assignment:** Deploy a Dev/UAT database directly on AKS using **StatefulSets**.
-* **Day 11: Application Routing**
-    * **1-Hour Session:** Explain environment-specific configurations.
-    * **Offline Assignment:** Configure Helm to support routing to in-cluster Dev DB vs. Azure Managed Prod DB based on values.
-* **Day 12: K8s & Terraform Evaluation**
-    * **1-Hour Session:** Final review of Month 1 setup to ensure readiness for GitOps.
+### Day 6: Provisioners & Environment Isolation
+* **Concepts:** Handling the "Last Mile" of configuration and managing multiple environments.
+* **Topic 1: Terraform Provisioners:** * **local-exec:** Running scripts on the local machine (e.g., updating local SSH config).
+    * **remote-exec & file:** Bootstrapping VMs by moving scripts and executing commands (e.g., installing Nginx/Docker) post-creation.
+* **Topic 2: Terraform Workspaces:** * Mastering state isolation using `terraform workspace new`, `list`, and `select`.
+    * Using `${terraform.workspace}` to dynamically name resources based on the active environment.
+* **Topic 3: Architectural Debate:** * Comparing **Workspaces** (shared state file) vs. **Directory-based Layouts** (fully isolated states) and when to use each in an Enterprise setting.
+
+### Day 7: State Refactoring, Security & CI/CD
+* **Concepts:** Production-grade safety, secret management, and automation.
+* **Topic 1: Zero-Downtime Refactoring:** * Implementing the **`moved` block** to rename resources or migrate them into modules without a "Destroy and Recreate" event.
+    * **State CLI:** Using `terraform state rm` and `terraform import` to bring existing manual resources under IaC management.
+* **Topic 2: Security & Lifecycle Hooks:** * **Secrets Management:** Integrating with **Azure Key Vault** data sources to pull credentials at runtime and using `sensitive = true`.
+    * **Lifecycle Management:** Using `prevent_destroy` to protect production databases and `create_before_destroy` for zero-downtime blue/green updates.
+* **Topic 3: The DevOps Pipeline:** * Orchestrating Terraform in **GitHub Actions** or **Azure DevOps**—automating `plan` on Pull Requests and `apply` on Merges to the `main` branch.
 
 ---
 
-## 📅 Month 2: Continuous Deployment & Advanced GitOps (ArgoCD)
-**Objective:** Fully automate the deployment lifecycle using the GitOps philosophy.
+### **Assignment 3: The Smart Infrastructure (Day 5 & 6 Lab)**
 
-### Week 5: Manifest Automation & ArgoCD Setup
-* **Day 13: The Manifest Repository**
-    * **1-Hour Session:** Explain separation of App Code vs. Manifest Repo.
-    * **Offline Assignment:** Set up a dedicated K8s Manifest Repo. Write a GitHub Action to update image tags.
-* **Day 14: ArgoCD Operator Deployment**
-    * **1-Hour Session:** Explain GitOps principles and ArgoCD architecture.
-    * **Offline Assignment:** Install ArgoCD Operator on AKS and local CLI. Connect ArgoCD to the Manifest Repo.
-* **Day 15: ArgoCD UI & Application Creation**
-    * **1-Hour Session:** Guide through the ArgoCD UI.
-    * **Offline Assignment:** Deploy the first application via ArgoCD UI and observe the initial sync.
+**Objective:** Build a self-configuring, environment-aware infrastructure.
 
-### Week 6: Advanced ArgoCD Patterns
-* **Day 16: Parent/Child App Sync Pattern**
-    * **1-Hour Session:** Discuss enterprise multi-app deployments.
-    * **Offline Assignment:** Implement "App of Apps" pattern (Root app detecting changes for child microservices).
-* **Day 17: Desired State Reconciliation**
-    * **1-Hour Session:** Live test of ArgoCD drift detection.
-    * **Offline Assignment:** Manually delete a deployment via Lens; document how ArgoCD automatically restores the state.
-* **Day 18: Health Validation**
-    * **1-Hour Session:** Explain how ArgoCD determines app health.
-    * **Offline Assignment:** Intentionally break a readiness probe and observe Health Validation failure.
+**The Task:**
+1. **Dynamic Security:** Use a `dynamic` block to deploy an NSG that opens a list of 5 ports (80, 443, 22, etc.) based on a single map variable.
+2. **Post-Build Scripting:** Use a **Provisioner** (`remote-exec`) to install a Web Server (Nginx/Apache) automatically once the VM is created.
+3. **Workspace Logic:** Use **Workspaces** to create `dev` and `prod`. Use a **Conditional** (`count`) to ensure a "Bastion Host" is ONLY created when the workspace is `prod`.
 
-### Week 7 & 8: GitOps Deep Dive & Flow Mastery
-* **Day 19: Managing Helm via ArgoCD**
-    * **1-Hour Session:** Explain dynamic Helm value processing in ArgoCD.
-    * **Offline Assignment:** Pass environment-specific values (Dev vs. Prod) during sync.
-* **Day 20: ArgoCD Sync Waves & Hooks**
-    * **1-Hour Session:** Discuss deployment ordering.
-    * **Offline Assignment:** Implement Sync Waves to ensure DB initializes before the App starts.
-* **Day 21-24: End-to-End Troubleshooting**
-    * **1-Hour Sessions:** Mentor intentionally breaks sync or Vault policies.
-    * **Offline Assignments:** Troubleshoot, fix, and ensure the pipeline is production-ready.
+### **Assignment 4: The Secure Refactor (Day 7 Lab)**
+
+**Objective:** Clean up existing "messy" code and secure sensitive data.
+
+**The Task:**
+1. **The Refactor:** Take a resource you previously created in the Root module and move it into a Child Module using a **`moved` block**. Prove that `terraform plan` shows 0 resources to be destroyed.
+2. **Zero-Secret Policy:** Remove all plain-text passwords from `terraform.tfvars`. Fetch the VM Administrator password from **Azure Key Vault** using a Data Source.
+3. **The Safety Catch:** Add a `lifecycle { prevent_destroy = true }` block to your Resource Group and try to run `terraform destroy`. Document the result.
 
 ---
 
-## 📅 Month 3: Observability Stack & Incident Management
-**Objective:** Build robust logging/monitoring and interview confidence.
-
-### Week 9: Log Aggregation (Loki Stack)
-* **Day 25: Deploying Loki Alloy**
-    * **1-Hour Session:** Observability concepts and unified agents.
-    * **Offline Assignment:** Deploy Loki Alloy on AKS to scrape metrics and logs.
-* **Day 26: Deploying Loki**
-    * **1-Hour Session:** Log stream storage architecture.
-    * **Offline Assignment:** Deploy Loki to aggregate streams forwarded by Alloy.
-* **Day 27: Log Querying via Grafana**
-    * **1-Hour Session:** Explain LogQL.
-    * **Offline Assignment:** Build a Grafana dashboard querying application logs.
-
-### Week 10: Monitoring, Metrics & Webhooks
-* **Day 28: Prometheus Integration**
-    * **1-Hour Session:** Time-series metrics.
-    * **Offline Assignment:** Deploy Prometheus via Alloy. Build Grafana dashboards for CPU/Memory.
-* **Day 29: Alertmanager Configuration**
-    * **1-Hour Session:** Incident response and routing.
-    * **Offline Assignment:** Configure Alertmanager for `HighCPU` or `CrashLoopBackOff` alerts.
-* **Day 30: Google Chat Webhook Integration**
-    * **1-Hour Session:** Webhook mechanics.
-    * **Offline Assignment:** Connect Alertmanager to Google Chat. Test by spiking CPU.
-
-### Week 11: Real-World Chaos Engineering
-* **Day 31: Scenario 1 - Key Vault Outage**
-    * **1-Hour Session:** Revoke AKS access to Key Vault.
-    * **Offline Assignment:** Use logs/ArgoCD to find the cause, fix RBAC, and write an RCA.
-* **Day 32: Scenario 2 - CrashLoop & Alerting**
-    * **1-Hour Session:** Deploy a broken image tag.
-    * **Offline Assignment:** Acknowledge alert, trace logs, rollback in ArgoCD, and document.
-* **Day 33: Operations Post-Mortem**
-    * **1-Hour Session:** Mock CTO review of incident response and production communication.
-
-### Week 12: Interview Prep & Professional Polish
-* **Day 34: System Design Interview Prep**
-    * **1-Hour Session:** Whiteboard techniques for the full architecture.
-    * **Offline Assignment:** Practice explaining the end-to-end flow.
-* **Day 35: Mock Technical Interview**
-    * **1-Hour Session:** Q&A on State locks, GitOps reconciliation, and CSI drivers.
-* **Day 36: Final Handoff & Career Strategy**
-    * **1-Hour Session:** Final review and actionable steps for the Ireland job market.
+**Summary & Graduation Wrap-up**
+> "By the end of Day 7, you are no longer just writing code. You are managing **State**, enforcing **Security**, and automating **Delivery**. You are ready for a Production environment."
