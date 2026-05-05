@@ -7,25 +7,25 @@
 **Objective:** Master Infrastructure as Code (IaC) and the core architecture of Kubernetes.
 
 ### Week 1: Terraform Mastery Progress Summary
-* **Day 1: Terraform Fundamentals (Part 1)**
+* **Day 1: Terraform Fundamentals - Part 1**
     * **Concepts:** Core pillars of IaC. Mastering Input Data Modeling using complex types like `map(object({...}))` and using **Locals** to keep the logic "DRY".
     * **Iteration Engine:** Implementing `for_each` to scale resources and using `lookup()` to handle optional data attributes.
-* **Day 2: State Management & Remote State**
-    * **Concepts:** Moving to **Enterprise-grade Remote Backends** (Azure Storage) and State Locking.
-    * **Data Chaining:** Mastering the `terraform_remote_state` data source to fetch information between layers without hardcoding.
-* **Day 3: Introduction to Terraform Modules**
-    * **Concepts:** Moving from "Scripting" to "Engineering." Understanding Modules as Containers.
-    * **Anatomy:** Establishing the Standard Module Structure (`main.tf`, `variables.tf`, `outputs.tf`).
-* **Day 4: Advanced Modules Lab (The Refactoring Challenge)**
-    * **Hands-on:** Refactoring individual folders into a library of Reusable Child Modules.
-    * **Output Chaining:** Implementing "Producer-Consumer" patterns and Environmental Scaling for Dev, UAT, and Prod.
-
-### Week 2: Advanced Terraform Engineering & Enterprise Operations
-* **Day 5: Dynamic Logic & Provisioners**
+* **Day 2: Terraform Fundamentals - Part 2**
     * **Topic 1: Conditional Infrastructure:** Mastering the Ternary Operator (`count`) and the Lead's insight on `for_each` vs `count` for index shifting.
     * **Topic 2: Terraform Import:** Mastering the `terraform import` command to bring "Brownfield" resources into HCL.
     * **Topic 3: Dynamic Blocks:** Implementing nested iteration for complex configurations like NSG rules.
     * **Topic 4: Provisioners & Isolation:** Deep dive into `local-exec`, `remote-exec`, and `file`. Managing environment isolation via Terraform Workspaces.
+* **Day 3: State Management & Remote State**
+    * **Concepts:** Moving to **Enterprise-grade Remote Backends** (Azure Storage) and State Locking.
+    * **Data Chaining:** Mastering the `terraform_remote_state` data source to fetch information between layers without hardcoding.
+* **Day 4: Introduction to Terraform Modules**
+    * **Concepts:** Moving from "Scripting" to "Engineering." Understanding Modules as Containers.
+    * **Anatomy:** Establishing the Standard Module Structure (`main.tf`, `variables.tf`, `outputs.tf`).
+
+### Week 2: Advanced Terraform Engineering & Enterprise Operations
+* **Day 5: Advanced Modules Lab (The Refactoring Challenge)**
+    * **Hands-on:** Refactoring individual folders into a library of Reusable Child Modules.
+    * **Output Chaining:** Implementing "Producer-Consumer" patterns and Environmental Scaling for Dev, UAT, and Prod.
 * **Day 6: Post-Apply Operations & CI/CD Pipelines**
     * **Topic 1: Post-Apply Operations:** Cloud-Init mastery and `cloudinit_config` data source for native bootstrapping without SSH.
     * **Topic 2: Azure OIDC Integration:** Setting up OpenID Connect between GitHub and Azure for passwordless, secure authentication.
