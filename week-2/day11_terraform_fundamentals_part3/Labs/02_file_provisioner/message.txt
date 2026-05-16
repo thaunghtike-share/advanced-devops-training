@@ -1,0 +1,2 @@
+Hello from Terraform file provisioner.
+This file was copied from your local machine to the remote VM.

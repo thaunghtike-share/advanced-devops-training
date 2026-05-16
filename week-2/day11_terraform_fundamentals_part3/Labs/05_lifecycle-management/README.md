@@ -1,4 +1,4 @@
-# Lab 08 — Lifecycle Management
+# Lab 10 — Lifecycle Management
 
 Practice lifecycle meta-arguments with Azure Resource Group and Storage Account.
 

@@ -10,10 +10,12 @@ These labs match Terraform Fundamentals Part 2 slide topics.
 4. Dynamic Block with Azure NSG
 5. Dynamic Block vs for_each
 6. Provisioners: local-exec
-7. Destroy Time and On Failure Provisioners
-8. Lifecycle Management
-9. Terraform Workspaces
-10. Final Mini Project
+7. Provisioners: file
+8. Provisioners: remote-exec
+9. Destroy Time and On Failure Provisioners
+10. Lifecycle Management
+11. Terraform Workspaces
+12. Final Mini Project
 
 ## Before Running Azure Labs
 

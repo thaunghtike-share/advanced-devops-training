@@ -1,4 +1,4 @@
-# Lab 07 — Destroy Time and On Failure Provisioners
+# Lab 09 — Destroy Time and On Failure Provisioners
 
 This lab uses `null_resource` so students can test provisioner behavior safely without real cloud resources.
 
